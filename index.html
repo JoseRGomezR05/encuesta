@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encuesta – Sistema de Turnos Notarial | SENA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0f1e35;
+    --navy-light: #1a2f4a;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #f5f0e8;
+    --cream-dark: #ede5d8;
+    --white: #ffffff;
+    --text-dark: #0f1e35;
+    --text-muted: #5a6a7e;
+    --accent: #c9a84c;
+    --success: #2d7a4f;
+    --shadow: 0 8px 40px rgba(15,30,53,0.12);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 10% 20%, rgba(201,168,76,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(15,30,53,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    width: 100%;
+    max-width: 780px;
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sena-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .sena-badge::before {
+    content: '⚖';
+    font-size: 14px;
+  }
+
+  .site-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 4vw, 38px);
+    color: var(--navy);
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .site-header h1 span {
+    color: var(--gold);
+  }
+
+  .site-header p {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 0;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+
+  .divider span {
+    color: var(--gold);
+    font-size: 16px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 780px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 36px 44px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-header::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .card-header::before {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .card-header h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--white);
+    font-size: 22px;
+    margin-bottom: 6px;
+    position: relative;
+  }
+
+  .card-header p {
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    font-weight: 300;
+    position: relative;
+  }
+
+  .card-body {
+    padding: 40px 44px;
+  }
+
+  /* ── CONSENT ── */
+  #consent-screen { display: block; }
+  #survey-screen  { display: none; }
+  #thankyou-screen { display: none; }
+
+  .consent-section {
+    margin-bottom: 28px;
+  }
+
+  .consent-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--navy);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .consent-section h3::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+
+  .consent-section p {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .info-item {
+    background: var(--cream);
+    border-left: 3px solid var(--gold);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .info-item label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .info-item span {
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 500;
+  }
+
+  .declaration-box {
+    background: linear-gradient(135deg, var(--cream) 0%, var(--cream-dark) 100%);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+
+  .declaration-box p {
+    font-size: 14px;
+    color: var(--text-dark);
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field-group label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .field-group input {
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--navy);
+    background: var(--white);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .field-group input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  .field-group input.error {
+    border-color: #c0392b;
+  }
+
+  .checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .checkbox-row input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--gold);
+    margin-top: 2px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .checkbox-row label {
+    font-size: 13px;
+    color: var(--text-dark);
+    line-height: 1.6;
+    cursor: pointer;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--navy) 0%, #1a3560 100%);
+    color: var(--white);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(15,30,53,0.25);
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    color: var(--navy);
+  }
+
+  .btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(201,168,76,0.35);
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+  }
+
+  .btn-outline:hover {
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  .btn-sm {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+
+  .btn-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  .error-msg {
+    color: #c0392b;
+    font-size: 12px;
+    margin-top: -16px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  /* ── SURVEY ── */
+  .survey-progress {
+    background: var(--cream);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .progress-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: var(--cream-dark);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--navy), var(--gold));
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  .progress-count {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    white-space: nowrap;
+  }
+
+  .question-block {
+    margin-bottom: 32px;
+    animation: fadeSlide 0.35s ease;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-number {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .question-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: var(--navy);
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--white);
+  }
+
+  .option-label:hover {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.04);
+  }
+
+  .option-label input[type="radio"],
+  .option-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--navy);
+    flex-shrink: 0;
+  }
+
+  .option-label input:checked ~ .option-text {
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  .option-label:has(input:checked) {
+    border-color: var(--navy);
+    background: rgba(15,30,53,0.04);
+  }
+
+  .option-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--cream);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .option-text {
+    font-size: 14px;
+    color: var(--text-dark);
+  }
+
+  .q-required {
+    color: #c0392b;
+    font-size: 11px;
+    margin-top: 6px;
+    display: none;
+  }
+
+  .q-separator {
+    border: none;
+    border-top: 1px solid var(--cream-dark);
+    margin: 0 0 32px;
+  }
+
+  .survey-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--cream-dark);
+    margin-top: 12px;
+  }
+
+  /* ── THANK YOU ── */
+  .thankyou-wrap {
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .checkmark {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, var(--navy), #1a3560);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 32px;
+    animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  .thankyou-wrap h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+
+  .thankyou-wrap p {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto 24px;
+  }
+
+  .gold-line {
+    width: 60px;
+    height: 3px;
+    background: var(--gold);
+    border-radius: 2px;
+    margin: 20px auto;
+  }
+
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 28px 0;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  @media (max-width: 600px) {
+    .card-body { padding: 28px 24px; }
+    .card-header { padding: 28px 24px 20px; }
+    .info-grid { grid-template-columns: 1fr; }
+    .field-row { grid-template-columns: 1fr; }
+    .stats-row { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="sena-badge">SENA – Grupo 3388951</div>
+  <h1>Sistema de <span>Gestión de Turnos</span><br>Notarial</h1>
+  <p>Análisis y Desarrollo de Software · Proyecto de Titulación</p>
+  <div class="divider"><span>✦</span></div>
+</header>
+
+<!-- CARD -->
+<div class="card">
+
+  <!-- ══ PANTALLA 1: CONSENTIMIENTO ══ -->
+  <div id="consent-screen">
+    <div class="card-header">
+      <h2>Consentimiento Informado</h2>
+      <p>Lea cuidadosamente antes de continuar con la encuesta</p>
+    </div>
+    <div class="card-body">
+
+      <!-- Info del proyecto -->
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Proyecto</label>
+          <span>Sistema de Gestión de Turnos Notarial</span>
+        </div>
+        <div class="info-item">
+          <label>Responsable</label>
+          <span>Grupo 3388951 – SENA</span>
+        </div>
+        <div class="info-item">
+          <label>Programa</label>
+          <span>Análisis y Desarrollo de Software</span>
+        </div>
+        <div class="info-item">
+          <label>Modalidad</label>
+          <span>Proyecto de Titulación</span>
+        </div>
+      </div>
+
+      <div class="consent-section">
+        <h3>Información para el participante</h3>
+        <p>
+          Usted está siendo invitado a participar en una encuesta que tiene como finalidad recopilar información sobre el proceso actual de atención y asignación de turnos en la notaría. Los datos recolectados permitirán identificar necesidades, dificultades y oportunidades de mejora con el objetivo de diseñar un sistema tecnológico que contribuya a optimizar la atención al público y reducir los tiempos de espera.
+        </p>
+      </div>
+
+      <div class="consent-section">
+        <h3>Voluntariedad y confidencialidad</h3>
+        <p>
+          Su participación en esta encuesta es <strong>voluntaria</strong>, lo que significa que puede decidir participar o retirarse en cualquier momento sin que esto genere ningún tipo de consecuencia. La información suministrada será utilizada únicamente con fines académicos y de análisis para el desarrollo del proyecto, garantizando la confidencialidad y protección de los datos proporcionados. La encuesta <strong>no requiere información personal sensible</strong> y los resultados serán analizados de forma general.
+        </p>
+      </div>
+
+      <!-- Declaración -->
+      <div class="declaration-box">
+        <p>
+          Yo, <strong id="nombre-display">________________________________</strong>, declaro que he sido informado(a) sobre el propósito de la encuesta y comprendo que mi participación es voluntaria. Asimismo, acepto participar en la recolección de información para el desarrollo del proyecto de análisis y diseño del sistema de gestión de turnos.
+        </p>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label>Nombre del participante *</label>
+            <input type="text" id="nombre-input" placeholder="Escriba su nombre completo" autocomplete="off">
+          </div>
+          <div class="field-group">
+            <label>Fecha *</label>
+            <input type="date" id="fecha-input">
+          </div>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="acepto-check">
+          <label for="acepto-check">
+            He leído y comprendo la información anterior. Acepto participar voluntariamente en esta encuesta y autorizo el uso de mis respuestas con fines académicos exclusivamente.
+          </label>
+        </div>
+      </div>
+
+      <p id="consent-error" class="error-msg" style="display:none; color:#c0392b; font-size:13px; margin-bottom:16px;">
+        ⚠ Por favor complete su nombre, la fecha y marque la casilla de aceptación para continuar.
+      </p>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="aceptarConsentimiento()">
+          Aceptar y continuar →
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ PANTALLA 2: ENCUESTA ══ -->
+  <div id="survey-screen">
+    <div class="card-header">
+      <h2>Encuesta – Sistema de Turnos Notarial</h2>
+      <p>Responda todas las preguntas. Algunas permiten una sola opción.</p>
+    </div>
+    <div class="card-body">
+
+      <div class="survey-progress">
+        <span class="progress-label">Progreso</span>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <span class="progress-count" id="progress-count">0 / 17</span>
+      </div>
+
+      <form id="survey-form">
+
+        <!-- P1 -->
+        <div class="question-block" id="q1">
+          <div class="question-number">Pregunta 01</div>
+          <div class="question-text">¿Cómo se asignan actualmente los turnos en la notaría?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q1" value="1"><span class="option-letter">A</span><span class="option-text">Manualmente</span></label>
+            <label class="option-label"><input type="radio" name="q1" value="2"><span class="option-letter">B</span><span class="option-text">Por orden de llegada</span></label>
+            <label class="option-label"><input type="radio" name="q1" value="3"><span class="option-letter">C</span><span class="option-text">Con fichas físicas</span></label>
+            <label class="option-label"><input type="radio" name="q1" value="4"><span class="option-letter">D</span><span class="option-text">No existe sistema de turnos</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P2 -->
+        <div class="question-block" id="q2">
+          <div class="question-number">Pregunta 02</div>
+          <div class="question-text">¿Cuántos usuarios atiende aproximadamente la notaría por día?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q2" value="1"><span class="option-letter">A</span><span class="option-text">20 – 50</span></label>
+            <label class="option-label"><input type="radio" name="q2" value="2"><span class="option-letter">B</span><span class="option-text">50 – 100</span></label>
+            <label class="option-label"><input type="radio" name="q2" value="3"><span class="option-letter">C</span><span class="option-text">100 – 200</span></label>
+            <label class="option-label"><input type="radio" name="q2" value="4"><span class="option-letter">D</span><span class="option-text">Más de 200</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P3 -->
+        <div class="question-block" id="q3">
+          <div class="question-number">Pregunta 03</div>
+          <div class="question-text">¿Cuál es el tiempo promedio de espera de los usuarios?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q3" value="1"><span class="option-letter">A</span><span class="option-text">Menos de 10 minutos</span></label>
+            <label class="option-label"><input type="radio" name="q3" value="2"><span class="option-letter">B</span><span class="option-text">10 – 20 minutos</span></label>
+            <label class="option-label"><input type="radio" name="q3" value="3"><span class="option-letter">C</span><span class="option-text">20 – 40 minutos</span></label>
+            <label class="option-label"><input type="radio" name="q3" value="4"><span class="option-letter">D</span><span class="option-text">Más de 40 minutos</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P4 -->
+        <div class="question-block" id="q4">
+          <div class="question-number">Pregunta 04</div>
+          <div class="question-text">¿Considera que el sistema actual de turnos es eficiente?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q4" value="1"><span class="option-letter">A</span><span class="option-text">Muy eficiente</span></label>
+            <label class="option-label"><input type="radio" name="q4" value="2"><span class="option-letter">B</span><span class="option-text">Eficiente</span></label>
+            <label class="option-label"><input type="radio" name="q4" value="3"><span class="option-letter">C</span><span class="option-text">Poco eficiente</span></label>
+            <label class="option-label"><input type="radio" name="q4" value="4"><span class="option-letter">D</span><span class="option-text">Ineficiente</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P5 (multi) -->
+        <div class="question-block" id="q5">
+          <div class="question-number">Pregunta 05</div>
+          <div class="question-text">¿Qué tipo de trámites son los más solicitados? <em style="font-size:12px;font-style:normal;color:var(--text-muted)">(puede marcar varias)</em></div>
+          <div class="options-grid">
+            <label class="option-label"><input type="checkbox" name="q5" value="1"><span class="option-letter">A</span><span class="option-text">Autenticaciones</span></label>
+            <label class="option-label"><input type="checkbox" name="q5" value="2"><span class="option-letter">B</span><span class="option-text">Declaraciones extrajuicio</span></label>
+            <label class="option-label"><input type="checkbox" name="q5" value="3"><span class="option-letter">C</span><span class="option-text">Escrituración</span></label>
+            <label class="option-label"><input type="checkbox" name="q5" value="4"><span class="option-letter">D</span><span class="option-text">Copias de documentos</span></label>
+            <label class="option-label"><input type="checkbox" name="q5" value="5"><span class="option-letter">E</span><span class="option-text">Otros</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione al menos una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P6 -->
+        <div class="question-block" id="q6">
+          <div class="question-number">Pregunta 06</div>
+          <div class="question-text">¿Se presentan congestiones en la atención al público?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q6" value="1"><span class="option-letter">A</span><span class="option-text">Siempre</span></label>
+            <label class="option-label"><input type="radio" name="q6" value="2"><span class="option-letter">B</span><span class="option-text">Frecuentemente</span></label>
+            <label class="option-label"><input type="radio" name="q6" value="3"><span class="option-letter">C</span><span class="option-text">Algunas veces</span></label>
+            <label class="option-label"><input type="radio" name="q6" value="4"><span class="option-letter">D</span><span class="option-text">Nunca</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P7 -->
+        <div class="question-block" id="q7">
+          <div class="question-number">Pregunta 07</div>
+          <div class="question-text">¿Cree que un sistema digital de turnos mejoraría la atención?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q7" value="1"><span class="option-letter">A</span><span class="option-text">Sí</span></label>
+            <label class="option-label"><input type="radio" name="q7" value="2"><span class="option-letter">B</span><span class="option-text">No</span></label>
+            <label class="option-label"><input type="radio" name="q7" value="3"><span class="option-letter">C</span><span class="option-text">Tal vez</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P8 -->
+        <div class="question-block" id="q8">
+          <div class="question-number">Pregunta 08</div>
+          <div class="question-text">¿Le gustaría que el sistema permita sacar turnos desde el celular?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q8" value="1"><span class="option-letter">A</span><span class="option-text">Sí</span></label>
+            <label class="option-label"><input type="radio" name="q8" value="2"><span class="option-letter">B</span><span class="option-text">No</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P9 -->
+        <div class="question-block" id="q9">
+          <div class="question-number">Pregunta 09</div>
+          <div class="question-text">¿Considera importante que el sistema muestre el tiempo estimado de espera?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q9" value="1"><span class="option-letter">A</span><span class="option-text">Muy importante</span></label>
+            <label class="option-label"><input type="radio" name="q9" value="2"><span class="option-letter">B</span><span class="option-text">Importante</span></label>
+            <label class="option-label"><input type="radio" name="q9" value="3"><span class="option-letter">C</span><span class="option-text">Poco importante</span></label>
+            <label class="option-label"><input type="radio" name="q9" value="4"><span class="option-letter">D</span><span class="option-text">No es necesario</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P10 -->
+        <div class="question-block" id="q10">
+          <div class="question-number">Pregunta 10</div>
+          <div class="question-text">¿El sistema debería clasificar los turnos según el tipo de trámite?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q10" value="1"><span class="option-letter">A</span><span class="option-text">Sí</span></label>
+            <label class="option-label"><input type="radio" name="q10" value="2"><span class="option-letter">B</span><span class="option-text">No</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P11 -->
+        <div class="question-block" id="q11">
+          <div class="question-number">Pregunta 11</div>
+          <div class="question-text">¿Sería útil que el sistema muestre en pantalla el número de turno actual?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q11" value="1"><span class="option-letter">A</span><span class="option-text">Sí</span></label>
+            <label class="option-label"><input type="radio" name="q11" value="2"><span class="option-letter">B</span><span class="option-text">No</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P12 (multi) -->
+        <div class="question-block" id="q12">
+          <div class="question-number">Pregunta 12</div>
+          <div class="question-text">¿Qué medio preferiría para recibir su turno? <em style="font-size:12px;font-style:normal;color:var(--text-muted)">(puede marcar varias)</em></div>
+          <div class="options-grid">
+            <label class="option-label"><input type="checkbox" name="q12" value="1"><span class="option-letter">A</span><span class="option-text">Pantalla digital</span></label>
+            <label class="option-label"><input type="checkbox" name="q12" value="2"><span class="option-letter">B</span><span class="option-text">Impresión de ticket</span></label>
+            <label class="option-label"><input type="checkbox" name="q12" value="3"><span class="option-letter">C</span><span class="option-text">Aplicación móvil</span></label>
+            <label class="option-label"><input type="checkbox" name="q12" value="4"><span class="option-letter">D</span><span class="option-text">Mensaje SMS</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione al menos una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P13 -->
+        <div class="question-block" id="q13">
+          <div class="question-number">Pregunta 13</div>
+          <div class="question-text">¿Considera importante que el sistema registre estadísticas de atención?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q13" value="1"><span class="option-letter">A</span><span class="option-text">Sí</span></label>
+            <label class="option-label"><input type="radio" name="q13" value="2"><span class="option-letter">B</span><span class="option-text">No</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P14 -->
+        <div class="question-block" id="q14">
+          <div class="question-number">Pregunta 14</div>
+          <div class="question-text">¿Con qué frecuencia se presentan reclamos por demoras?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q14" value="1"><span class="option-letter">A</span><span class="option-text">Muy frecuentemente</span></label>
+            <label class="option-label"><input type="radio" name="q14" value="2"><span class="option-letter">B</span><span class="option-text">Frecuentemente</span></label>
+            <label class="option-label"><input type="radio" name="q14" value="3"><span class="option-letter">C</span><span class="option-text">Ocasionalmente</span></label>
+            <label class="option-label"><input type="radio" name="q14" value="4"><span class="option-letter">D</span><span class="option-text">Nunca</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P15 -->
+        <div class="question-block" id="q15">
+          <div class="question-number">Pregunta 15</div>
+          <div class="question-text">¿El sistema debería permitir priorizar ciertos usuarios?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q15" value="1"><span class="option-letter">A</span><span class="option-text">Sí</span></label>
+            <label class="option-label"><input type="radio" name="q15" value="2"><span class="option-letter">B</span><span class="option-text">No</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P16 -->
+        <div class="question-block" id="q16">
+          <div class="question-number">Pregunta 16</div>
+          <div class="question-text">¿Qué tan importante es mejorar la organización de filas?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q16" value="1"><span class="option-letter">A</span><span class="option-text">Muy importante</span></label>
+            <label class="option-label"><input type="radio" name="q16" value="2"><span class="option-letter">B</span><span class="option-text">Importante</span></label>
+            <label class="option-label"><input type="radio" name="q16" value="3"><span class="option-letter">C</span><span class="option-text">Poco importante</span></label>
+            <label class="option-label"><input type="radio" name="q16" value="4"><span class="option-letter">D</span><span class="option-text">No es importante</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+        <hr class="q-separator">
+
+        <!-- P17 -->
+        <div class="question-block" id="q17">
+          <div class="question-number">Pregunta 17</div>
+          <div class="question-text">¿Apoyaría la implementación de un sistema tecnológico para gestionar los turnos?</div>
+          <div class="options-grid">
+            <label class="option-label"><input type="radio" name="q17" value="1"><span class="option-letter">A</span><span class="option-text">Sí</span></label>
+            <label class="option-label"><input type="radio" name="q17" value="2"><span class="option-letter">B</span><span class="option-text">No</span></label>
+          </div>
+          <p class="q-required">* Por favor seleccione una opción.</p>
+        </div>
+
+        <p id="survey-error" style="color:#c0392b;font-size:13px;display:none;margin-bottom:12px;">
+          ⚠ Hay preguntas sin responder. Por favor complete todas las preguntas marcadas.
+        </p>
+
+        <div class="survey-nav">
+          <button type="button" class="btn btn-outline btn-sm" onclick="volverConsentimiento()">← Volver</button>
+          <button type="button" class="btn btn-gold" onclick="enviarEncuesta()">Enviar encuesta ✓</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ══ PANTALLA 3: GRACIAS ══ -->
+  <div id="thankyou-screen">
+    <div class="card-header">
+      <h2>¡Encuesta completada!</h2>
+      <p>Gracias por su valiosa participación</p>
+    </div>
+    <div class="card-body">
+      <div class="thankyou-wrap">
+        <div class="checkmark">✓</div>
+        <h2>¡Muchas gracias!</h2>
+        <div class="gold-line"></div>
+        <p>
+          Sus respuestas han sido registradas exitosamente. La información proporcionada contribuirá al diseño de un mejor sistema de gestión de turnos para la notaría.
+        </p>
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-num">17</div>
+            <div class="stat-label">Preguntas respondidas</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" id="finish-name-short">—</div>
+            <div class="stat-label">Participante</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" id="finish-date">—</div>
+            <div class="stat-label">Fecha</div>
+          </div>
+        </div>
+        <p style="font-size:13px; margin-bottom:20px;">
+          <strong>SENA – Grupo 3388951</strong><br>
+          Programa: Análisis y Desarrollo de Software
+        </p>
+        <button class="btn btn-gold" onclick="reabrirWhatsApp()" style="margin:0 auto; display:inline-flex;">
+          📲 Abrir WhatsApp nuevamente
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /card -->
+
+<script>
+  // Inicializar fecha de hoy
+  const hoy = new Date().toISOString().split('T')[0];
+  document.getElementById('fecha-input').value = hoy;
+  document.getElementById('fecha-input').max = hoy;
+
+  // Actualizar el nombre en la declaración en tiempo real
+  document.getElementById('nombre-input').addEventListener('input', function() {
+    const val = this.value.trim() || '________________________________';
+    document.getElementById('nombre-display').textContent = val;
+  });
+
+  // Actualizar progreso en tiempo real
+  document.getElementById('survey-form').addEventListener('change', actualizarProgreso);
+
+  function actualizarProgreso() {
+    const total = 17;
+    let respondidas = 0;
+    for (let i = 1; i <= 17; i++) {
+      const name = 'q' + i;
+      const radios = document.querySelectorAll(`input[name="${name}"][type="radio"]:checked`);
+      const checks = document.querySelectorAll(`input[name="${name}"][type="checkbox"]:checked`);
+      if (radios.length > 0 || checks.length > 0) respondidas++;
+    }
+    const pct = Math.round((respondidas / total) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-count').textContent = respondidas + ' / ' + total;
+  }
+
+  function aceptarConsentimiento() {
+    const nombre = document.getElementById('nombre-input').value.trim();
+    const fecha  = document.getElementById('fecha-input').value;
+    const acepto = document.getElementById('acepto-check').checked;
+    const errEl  = document.getElementById('consent-error');
+
+    if (!nombre || !fecha || !acepto) {
+      errEl.style.display = 'block';
+      if (!nombre) document.getElementById('nombre-input').classList.add('error');
+      else         document.getElementById('nombre-input').classList.remove('error');
+      return;
+    }
+
+    errEl.style.display = 'none';
+    document.getElementById('nombre-input').classList.remove('error');
+
+    // Guardar para pantalla final
+    window._participante = nombre;
+    window._fecha = fecha;
+
+    // Mostrar encuesta
+    document.getElementById('consent-screen').style.display = 'none';
+    document.getElementById('survey-screen').style.display  = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    actualizarProgreso();
+  }
+
+  function volverConsentimiento() {
+    document.getElementById('survey-screen').style.display  = 'none';
+    document.getElementById('consent-screen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  const OPCIONES = {
+    q1:  ['Manualmente','Por orden de llegada','Con fichas físicas','No existe sistema de turnos'],
+    q2:  ['20 – 50','50 – 100','100 – 200','Más de 200'],
+    q3:  ['Menos de 10 min','10 – 20 min','20 – 40 min','Más de 40 min'],
+    q4:  ['Muy eficiente','Eficiente','Poco eficiente','Ineficiente'],
+    q5:  ['Autenticaciones','Declaraciones extrajuicio','Escrituración','Copias de documentos','Otros'],
+    q6:  ['Siempre','Frecuentemente','Algunas veces','Nunca'],
+    q7:  ['Sí','No','Tal vez'],
+    q8:  ['Sí','No'],
+    q9:  ['Muy importante','Importante','Poco importante','No es necesario'],
+    q10: ['Sí','No'],
+    q11: ['Sí','No'],
+    q12: ['Pantalla digital','Impresión de ticket','Aplicación móvil','Mensaje SMS'],
+    q13: ['Sí','No'],
+    q14: ['Muy frecuentemente','Frecuentemente','Ocasionalmente','Nunca'],
+    q15: ['Sí','No'],
+    q16: ['Muy importante','Importante','Poco importante','No es importante'],
+    q17: ['Sí','No'],
+  };
+
+  const PREGUNTAS = {
+    q1:'¿Cómo se asignan los turnos?',
+    q2:'¿Usuarios por día?',
+    q3:'¿Tiempo promedio de espera?',
+    q4:'¿Sistema actual eficiente?',
+    q5:'¿Trámites más solicitados?',
+    q6:'¿Congestiones en atención?',
+    q7:'¿Sistema digital mejoraría?',
+    q8:'¿Turnos desde celular?',
+    q9:'¿Mostrar tiempo estimado?',
+    q10:'¿Clasificar por trámite?',
+    q11:'¿Mostrar turno en pantalla?',
+    q12:'¿Medio preferido de turno?',
+    q13:'¿Registrar estadísticas?',
+    q14:'¿Frecuencia de reclamos?',
+    q15:'¿Priorizar usuarios?',
+    q16:'¿Importancia organización filas?',
+    q17:'¿Apoyaría sistema tecnológico?',
+  };
+
+  function obtenerRespuesta(name, esMultiple) {
+    if (esMultiple) {
+      const vals = [...document.querySelectorAll(`input[name="${name}"][type="checkbox"]:checked`)]
+        .map(el => OPCIONES[name][parseInt(el.value)-1]);
+      return vals.join(', ');
+    } else {
+      const radio = document.querySelector(`input[name="${name}"]:checked`);
+      return radio ? OPCIONES[name][parseInt(radio.value)-1] : '—';
+    }
+  }
+
+  function enviarEncuesta() {
+    const multipleChoice = [5, 12];
+    let valid = true;
+    let primeraFalla = null;
+
+    for (let i = 1; i <= 17; i++) {
+      const name = 'q' + i;
+      let respondida = false;
+      if (multipleChoice.includes(i)) {
+        respondida = document.querySelectorAll(`input[name="${name}"]:checked`).length > 0;
+      } else {
+        respondida = !!document.querySelector(`input[name="${name}"]:checked`);
+      }
+      const qBlock = document.getElementById('q' + i);
+      const errMsg = qBlock.querySelector('.q-required');
+      if (!respondida) {
+        valid = false;
+        errMsg.style.display = 'block';
+        qBlock.style.background = 'rgba(192,57,43,0.04)';
+        qBlock.style.borderRadius = '10px';
+        qBlock.style.padding = '12px';
+        if (!primeraFalla) primeraFalla = qBlock;
+      } else {
+        errMsg.style.display = 'none';
+        qBlock.style.background = '';
+        qBlock.style.padding = '';
+      }
+    }
+
+    if (!valid) {
+      document.getElementById('survey-error').style.display = 'block';
+      primeraFalla.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    document.getElementById('survey-error').style.display = 'none';
+
+    // Construir mensaje WhatsApp
+    const nombre  = window._participante || 'Participante';
+    const fecha   = window._fecha || hoy;
+    const fechaFmt = new Date(fecha + 'T12:00:00').toLocaleDateString('es-CO', {day:'2-digit',month:'long',year:'numeric'});
+
+    let msg = '';
+    msg += '📋 *ENCUESTA – SISTEMA DE TURNOS NOTARIAL*\n';
+    msg += '━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    msg += '🏢 *SENA – Grupo 3388951*\n';
+    msg += '📚 Análisis y Desarrollo de Software\n\n';
+    msg += '✅ *CONSENTIMIENTO INFORMADO*\n';
+    msg += `👤 Participante: ${nombre}\n`;
+    msg += `📅 Fecha: ${fechaFmt}\n`;
+    msg += '🔏 Acepta participar voluntariamente: *SÍ*\n\n';
+    msg += '━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    msg += '📝 *RESPUESTAS DE LA ENCUESTA*\n';
+    msg += '━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+
+    for (let i = 1; i <= 17; i++) {
+      const name = 'q' + i;
+      const esMulti = [5,12].includes(i);
+      const resp = obtenerRespuesta(name, esMulti);
+      msg += `*P${i}.* ${PREGUNTAS[name]}\n`;
+      msg += `➡ ${resp}\n\n`;
+    }
+
+    msg += '━━━━━━━━━━━━━━━━━━━━━━━━\n';
+    msg += '✔ Encuesta completada correctamente.\n';
+    msg += `🕐 Enviado el ${fechaFmt}`;
+
+    // Detectar móvil o escritorio
+    const esCelular = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const numero = '573004804521'; // Colombia +57
+    const encoded = encodeURIComponent(msg);
+    const url = esCelular
+      ? `https://wa.me/${numero}?text=${encoded}`
+      : `https://web.whatsapp.com/send?phone=${numero}&text=${encoded}`;
+
+    // Mostrar pantalla de gracias
+    const primerNombre = nombre.split(' ')[0];
+    document.getElementById('finish-name-short').textContent = primerNombre;
+    document.getElementById('finish-date').textContent = new Date(fecha+'T12:00:00').toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'});
+    document.getElementById('survey-screen').style.display   = 'none';
+    document.getElementById('thankyou-screen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Abrir WhatsApp
+    window._lastWaUrl = url;
+    setTimeout(() => { window.open(url, '_blank'); }, 800);
+  }
+
+  function reabrirWhatsApp() {
+    if (window._lastWaUrl) window.open(window._lastWaUrl, '_blank');
+  }
+</script>
+</body>
+</html>
